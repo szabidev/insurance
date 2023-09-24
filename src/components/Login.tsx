@@ -1,14 +1,13 @@
 import React, { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Field } from "react-final-form";
-import Button from "react-bootstrap/esm/Button";
 import { useAppDispatch } from "../custom-hooks/useAppDispatch";
-// import { useAppSelector } from "../custom-hooks/useAppSelector";
 import { setUserEmail } from "../app-store/slices/login";
 import { UserFormValues } from "../types/interfaces";
-import { useNavigate } from "react-router-dom";
+
+import Button from "react-bootstrap/esm/Button";
 
 const Login: FC = () => {
-  // const store = useAppSelector((store) => store.loginDetails);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -19,7 +18,6 @@ const Login: FC = () => {
   const goToRegisterPage = () => {
     navigate("/register");
   };
-  // const email = store.email;
 
   const handleLoginSubmit = (values: UserFormValues) => {
     fetch("http://localhost:8000/login", {

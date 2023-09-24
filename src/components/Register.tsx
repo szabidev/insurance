@@ -1,51 +1,50 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Form, Field } from "react-final-form";
 import Button from "react-bootstrap/esm/Button";
 import { useAppDispatch } from "../custom-hooks/useAppDispatch";
-// import { useAppSelector } from "../custom-hooks/useAppSelector";
 import { UserFormValues } from "../types/interfaces";
-// import {
-//   setIsRegistered,
-//   setRegEmail,
-//   setRegPassword,
-// } from "../app-store/slices/register";
+
 import { useNavigate } from "react-router-dom";
 import { setUserEmail } from "../app-store/slices/login";
 
 const Register: FC = () => {
-  // const store = useAppSelector((store) => store.registerDetails);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const goToAccountPage = () => {
     navigate("/account");
   };
-
-  // const email = store.email;
-  // const password = store.password;
-  // const isRegistered = store.isRegistered;
 
   const initialValues: UserFormValues = {
     email: "",
     password: "",
   };
 
-  const handleRegSubmit = (values: UserFormValues) => {
+  const handleEmail = (e: React.FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+  };
+  const handlePassword = (e: React.FormEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
+  };
+
+  const handleRegSubmit = () => {
     fetch("http://localhost:8000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: values.email,
-        password: values.password,
+        email: email,
+        password: password,
       }),
-    }).then((response) => response.json());
+    })
+      .then((response) => response.json())
+      .then((user) => console.log(user));
 
-    // dispatch(setRegEmail(values.email));
-    dispatch(setUserEmail(values.email));
-    // dispatch(setRegPassword(values.password));
-    // dispatch(setIsRegistered(true));
+    dispatch(setUserEmail(email));
+
     goToAccountPage();
   };
 
@@ -67,6 +66,8 @@ const Register: FC = () => {
                       type="email"
                       placeholder="Email address"
                       required
+                      onChange={handleEmail}
+                      value={email}
                     />
                     {meta.error && meta.touched && <span>{meta.error}</span>}
                   </div>
@@ -81,6 +82,8 @@ const Register: FC = () => {
                       type="password"
                       placeholder="Password"
                       required
+                      onChange={handlePassword}
+                      value={password}
                     />
                     {meta.error && meta.touched && <span>{meta.error}</span>}
                   </div>
